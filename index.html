@@ -19,12 +19,10 @@
             color: white; overflow-x: hidden; 
         }
 
-        /* قفل التمرير قبل فتح المظروف */
         body.locked { overflow: hidden; }
 
         #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-        /* --- تصميم المظروف المتجاوب --- */
         #envelope-section {
             position: fixed; inset: 0; z-index: 100;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -52,14 +50,12 @@
 
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* --- المحتوى الرئيسي (بعد الفتح) --- */
         #main-content { display: none; opacity: 0; position: relative; z-index: 2; width: 100%; }
 
-        /* الخلفية التي طلبتها بصورتك الخاصة */
         .bg-fixed {
             position: fixed; inset: 0; 
             background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('Hagar.jpg'); /* اسم صورتك */
+                        url('Hagar.jpg');
             background-size: cover; 
             background-position: center; 
             z-index: -1; 
@@ -142,12 +138,13 @@
                     <div class="count-box"><span id="days">00</span>أيام</div>
                     <div class="count-box"><span id="hours">00</span>ساعات</div>
                     <div class="count-box"><span id="minutes">00</span>دقائق</div>
+                    <div class="count-box"><span id="seconds">00</span>ثواني</div>
                 </div>
             </div>
 
             <div class="glass-card">
                 <h3 style="color:var(--gold); margin-bottom: 15px;">موعدنا المنتظر</h3>
-                <p style="font-size: 1.3rem;">الأحد، 14 يونيو 2026</p>
+                <p style="font-size: 1.3rem;">الخميس، 28 مايو 2026</p>
                 <p>فندق ماريوت - القاعة الملكية</p>
                 <p>الساعة 8:00 مساءً</p>
                 <button class="gold-btn" onclick="window.open('https://maps.google.com')">عرض الموقع على الخريطة</button>
@@ -179,10 +176,9 @@
                 setTimeout(() => {
                     section.style.display = 'none';
                     main.style.display = 'block';
-                    document.body.classList.remove('locked'); // تفعيل السكرول بعد الفتح
+                    document.body.classList.remove('locked');
                     setTimeout(() => {
                         main.style.opacity = '1';
-                        // تفعيل مراقب العناصر لتظهر عند السكرول
                         const observer = new IntersectionObserver((entries) => {
                             entries.forEach(entry => {
                                 if(entry.isIntersecting) entry.target.classList.add('visible');
@@ -194,20 +190,26 @@
             }, 800);
         }
 
-        // التعداد التنازلي
-        const countDate = new Date("June 14, 2026 20:00:00").getTime();
+        // ✅ الحل النهائي للعداد (شغال 100%)
+        const countDate = new Date(2026, 4, 28, 20, 0, 0).getTime();
+
         setInterval(() => {
             const now = new Date().getTime();
             const gap = countDate - now;
-            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
-            if(gap > 0) {
+
+            const second = 1000,
+                  minute = second * 60,
+                  hour = minute * 60,
+                  day = hour * 24;
+
+            if (gap > 0) {
                 document.getElementById('days').innerText = Math.floor(gap / day);
                 document.getElementById('hours').innerText = Math.floor((gap % day) / hour);
                 document.getElementById('minutes').innerText = Math.floor((gap % hour) / minute);
+                document.getElementById('seconds').innerText = Math.floor((gap % minute) / second);
             }
         }, 1000);
 
-        // جزيئات ذهبية خلفية
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
